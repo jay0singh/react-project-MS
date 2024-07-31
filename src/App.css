@@ -575,3 +575,16 @@ button {
     padding: 0.3rem 0.4rem;
   }
 }
+
+.footer-div {
+  position: fixed;
+  display: flex;
+  height: 40px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--light-color);
+  color: black;
+  justify-content: center;
+  text-align: center;
+}
