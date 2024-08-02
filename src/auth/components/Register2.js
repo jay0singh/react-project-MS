@@ -1,5 +1,8 @@
+import PropTypes from "prop-types";
 import React, { useState } from "react";
-import { registerService } from "../services/auth.service";
+import { connect } from "react-redux";
+import { registerAction } from "../redux/actions/auth.action";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   name: "",
@@ -8,7 +11,8 @@ const initialState = {
   password2: "",
 };
 
-const Register = () => {
+const Register2 = ({ isAuthenticated, registerAction }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(initialState);
 
   const [error, setError] = useState({});
@@ -22,23 +26,24 @@ const Register = () => {
     e.preventDefault();
     console.log("hello from form");
     console.log(formData);
-    registerService(formData)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        let errDetails = {};
-        err.response.data.errors.forEach((e) => {
-          errDetails[e.param] = e.msg;
-          console.log(errDetails);
-        });
+    registerAction(formData, navigate);
+    // registerService(formData)
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     let errDetails = {};
+    //     err.response.data.errors.forEach((e) => {
+    //       errDetails[e.param] = e.msg;
+    //       console.log(errDetails);
+    //     });
 
-        setError([...errDetails]);
-        // err.response.data.errors.forEach((element) => {
-        //   setError({ ...element });
-        //   console.log(element);
-        // });
-      });
+    //     setError([...errDetails]);
+    //     // err.response.data.errors.forEach((element) => {
+    //     //   setError({ ...element });
+    //     //   console.log(element);
+    //     // });
+    //   });
   };
 
   return (
@@ -102,4 +107,15 @@ const Register = () => {
   );
 };
 
-export default Register;
+Register2.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  registerAction: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.authReducer.isAuthenticated,
+});
+
+const mapDispatchToProps = { registerAction };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register2);

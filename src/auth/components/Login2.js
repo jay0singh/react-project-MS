@@ -1,13 +1,19 @@
+import PropTypes from "prop-types";
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { loginAction } from "../redux/actions/auth.action";
 import { loginService } from "../services/auth.service";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   email: "",
   password: "",
 };
 
-const Login = () => {
+export const Login2 = ({ isAutheticated, loginAction }) => {
   const [formData, setFormData] = useState(initialState);
+
+  const navigate = useNavigate();
 
   const [error, setError] = useState({});
 
@@ -19,19 +25,20 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("hello from form");
-    loginService(formData)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        let errDetails = {};
-        err.response.data.errors.forEach((e) => {
-          errDetails[e.param] = e.msg;
-          console.log(errDetails);
-        });
+    //loginService(formData);
+    loginAction(formData, navigate);
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     let errDetails = {};
+    //     err.response.data.errors.forEach((e) => {
+    //       errDetails[e.param] = e.msg;
+    //       console.log(errDetails);
+    //     });
 
-        setError([...errDetails]);
-      });
+    //     setError([...errDetails]);
+    //   });
   };
 
   return (
@@ -71,4 +78,15 @@ const Login = () => {
   );
 };
 
-export default Login;
+Login2.propTypes = {
+  isAuthenticated: PropTypes.bool,
+  loginAction: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.authReducer.isAuthenticated,
+});
+
+const mapDispatchToProps = { loginAction };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login2);
