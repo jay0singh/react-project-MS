@@ -8,9 +8,7 @@ const initialState = {
 
 const Login = () => {
   const [formData, setFormData] = useState(initialState);
-
   const [error, setError] = useState({});
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     console.log(e.target.value);
@@ -18,7 +16,6 @@ const Login = () => {
   const { email, password } = formData;
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("hello from form");
     loginService(formData)
       .then((res) => {
         console.log(res);
@@ -29,7 +26,6 @@ const Login = () => {
           errDetails[e.param] = e.msg;
           console.log(errDetails);
         });
-
         setError([...errDetails]);
       });
   };
